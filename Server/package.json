@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "broker": "mosca -v | pino-pretty"
+  },
+  "dependencies": {
+    "mosca": "^2.8.3",
+    "pino": "^8.7.0",
+    "pino-pretty": "^9.1.1"
+  }
+}
