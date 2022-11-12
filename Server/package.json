@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "broker": "mosca -v | pino-pretty"
+    "broker": "node ./mqttbroker/broker.js"
   },
   "dependencies": {
-    "mosca": "^2.8.3",
+    "aedes": "^0.48.0",
     "pino": "^8.7.0",
     "pino-pretty": "^9.1.1"
   }
