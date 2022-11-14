@@ -6,43 +6,16 @@
 #include <TaskScheduler.h>
 #include <Ticker.h>
 
-/* Dividers:
-		TIM_DIV1 = 0,   //80MHz (80 ticks/us - 104857.588 us max)
-		TIM_DIV16 = 1,  //5MHz (5 ticks/us - 1677721.4 us max)
-		TIM_DIV256 = 3  //312.5Khz (1 tick = 3.2us - 26843542.4 us max)
-	Reloads:
-		TIM_SINGLE	0 //on interrupt routine you need to write a new value to start the timer again
-		TIM_LOOP	1 //on interrupt the counter will start with the same value again
-	*/
-
 Ticker timer1;
 volatile int flag_send;
-
 
 #define MSG_BUFFER_SIZE	100
 #define REPORTING_PERIOD 5000
 
-
-/*
-Scheduler ts;
-
-void task_beat_callback();
-//void task_loop_callback();
-void task_send_callback();
-
-
-Task beat(B_PERIOD * TASK_MILLISECOND, B_ITERATIONS,&task_beat_callback,&ts,true);
-//Task mqttLoop(LOOP_PERIOD * TASK_MILLISECOND, LOOP_ITERATIONS,&task_loop_callback,&ts,true);
-Task dataSend(LOOP_PERIOD * TASK_MILLISECOND, LOOP_ITERATIONS,&task_send_callback,&ts,true);
-
-
-*/
-
-
 uint32_t tsLastReport = 0;
 const char* ssid = "MERCUSYS";
 const char* password = "ic123456";
-const char* mqtt_server = "192.168.1.100";
+const char* mqtt_server = "192.168.1.101";
 const int mqtt_port = 1883;
 
 DynamicJsonDocument doc(255);
@@ -77,41 +50,6 @@ void reconnect() {
     }
   }
 }
-/* 
-
-void task_beat_callback(){
-  Serial.print("Beat ...");
-  pox.update();
-}
-
-void task_loop_callback(){
-  if (!client.connected()) {
-      reconnect();
-    }
-  client.loop();
-  Serial.println("loop");
-}
-
-void task_send_callback(){
-  if (!client.connected()) {
-      reconnect();
-    }
-  client.loop();
-  Serial.println("loop");
-  if (count>5){
-    if (!client.connected()) {
-      reconnect();
-    }
-    count=0;
-    doc["heartrate"] = pox.getHeartRate();
-    doc["oxygen"] = pox.getSpO2();
-    serializeJson(doc,buff);
-    Serial.println(buff);
-    client.publish("Device/BO",buff);
-  }
-
-}
-*/
 
 void onBeatDetected() {
     count++;
@@ -155,7 +93,6 @@ PulseOximeter sensor;
 
 void ICACHE_RAM_ATTR onTime() {
 	sensor.update();
-  
 }
 
 void setup() {
@@ -163,8 +100,6 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
-
-  
   // Config BioHub
   if (!sensor.begin()) {
         Serial.println("FAILED");
@@ -196,20 +131,5 @@ void loop() {
     count=0;
     }
   }
-  /*
-  if (count>5&&(millis()-tsLastReport)>REPORTING_PERIOD) {
-    if (!client.connected()) {
-      reconnect();
-    }
-    count=0;
-    client.loop();
-    doc["heartrate"] = pox.getHeartRate();
-    doc["oxygen"] = pox.getSpO2();
-    serializeJson(doc,buff);
-    Serial.println(buff);
-    client.publish("Device/BO",buff);
-    tsLastReport = millis();
-  }
-  */
 }
 
