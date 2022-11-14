@@ -13,9 +13,9 @@ volatile int flag_send;
 #define REPORTING_PERIOD 5000
 
 uint32_t tsLastReport = 0;
-const char* ssid = "MERCUSYS";
-const char* password = "ic123456";
-const char* mqtt_server = "192.168.1.101";
+const char* ssid = "....";
+const char* password = "....";
+const char* mqtt_server = "....";
 const int mqtt_port = 1883;
 
 DynamicJsonDocument doc(255);
